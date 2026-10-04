@@ -6,8 +6,9 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
-import { CreateUsuarioDto } from '../usuarios/dto/create-usuario.dto';
 import * as bcrypt from 'bcryptjs';
+import { RegisterDto } from './dto/register.dto';
+import { CargoUsuario, Prisma, Usuario } from '../generated/prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,18 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
+
+  private semSenha(usuario: Usuario) {
+    return {
+      id: usuario.id,
+      nome: usuario.nome,
+      email: usuario.email,
+      cargo: usuario.cargo,
+      ativo: usuario.ativo,
+      createdAt: usuario.createdAt,
+      updatedAt: usuario.updatedAt,
+    };
+  }
 
   async validateUser(email: string, pass: string) {
     const usuario = await this.prisma.usuario.findUnique({
@@ -25,17 +38,9 @@ export class AuthService {
       return null;
     }
 
-    // Suporta senha com hash bcrypt e também texto plano (compatibilidade retroativa com dados existentes)
-    let isPasswordValid = false;
-    try {
-      isPasswordValid = await bcrypt.compare(pass, usuario.senha);
-    } catch {
-      isPasswordValid = false;
-    }
-
-    if (!isPasswordValid && pass === usuario.senha) {
-      isPasswordValid = true;
-    }
+    const isPasswordValid = await bcrypt
+      .compare(pass, usuario.senha)
+      .catch(() => false);
 
     if (!isPasswordValid) {
       return null;
@@ -45,8 +50,7 @@ export class AuthService {
       throw new UnauthorizedException('Usuário inativo no sistema.');
     }
 
-    const { senha, ...result } = usuario;
-    return result;
+    return this.semSenha(usuario);
   }
 
   async login(loginDto: LoginDto) {
@@ -72,25 +76,44 @@ export class AuthService {
     };
   }
 
-  async register(createUsuarioDto: CreateUsuarioDto) {
+  async register(registerDto: RegisterDto) {
     const usuarioExistente = await this.prisma.usuario.findUnique({
-      where: { email: createUsuarioDto.email },
+      where: { email: registerDto.email },
     });
 
     if (usuarioExistente) {
-      throw new ConflictException('Já existe um usuário cadastrado com este e-mail.');
+      throw new ConflictException(
+        'Já existe um usuário cadastrado com este e-mail.',
+      );
     }
 
-    const hashedPassword = bcrypt.hashSync(createUsuarioDto.senha, 10);
+    const hashedPassword = await bcrypt.hash(registerDto.senha, 10);
+    let novoUsuario: Usuario;
 
-    const novoUsuario = await this.prisma.usuario.create({
-      data: {
-        ...createUsuarioDto,
-        senha: hashedPassword,
-      },
-    });
+    try {
+      novoUsuario = await this.prisma.usuario.create({
+        data: {
+          nome: registerDto.nome,
+          email: registerDto.email,
+          senha: hashedPassword,
+          cargo: CargoUsuario.CLIENTE,
+          ativo: true,
+        },
+      });
+    } catch (error: unknown) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          'Já existe um usuário cadastrado com este e-mail.',
+        );
+      }
 
-    const { senha, ...userSemSenha } = novoUsuario;
+      throw error;
+    }
+
+    const userSemSenha = this.semSenha(novoUsuario);
 
     const payload = {
       sub: userSemSenha.id,

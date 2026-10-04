@@ -1,28 +1,26 @@
-import { applyDecorators, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../jwt-auth.guard';
+import { applyDecorators } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { CargoUsuario } from '../../generated/prisma/client';
+import { Roles } from './roles.decorator';
 
 /**
- * Decorator `@Authorize` / `@Authorize()` para proteger rotas com autenticação JWT
- * e registrar a exigência de Bearer Token no Swagger (adicionando a tag e o cadeado de autorização).
+ * Documenta a autenticação JWT e, opcionalmente, restringe a rota por cargo.
+ * A autenticação é aplicada globalmente pelo JwtAuthGuard.
  */
-export function Authorize(...args: any[]) {
-  const decorator = applyDecorators(
-    UseGuards(JwtAuthGuard),
-    ApiBearerAuth(),
+export function Authorize(...roles: CargoUsuario[]) {
+  return applyDecorators(
+    Roles(...roles),
+    ApiBearerAuth('JWT-auth'),
     ApiUnauthorizedResponse({
-      description: 'Acesso não autorizado. Forneça um token JWT válido no cabeçalho Authorization: Bearer <token>',
+      description:
+        'Acesso não autorizado. Forneça um token JWT válido no cabeçalho Authorization: Bearer <token>',
+    }),
+    ApiForbiddenResponse({
+      description: 'O usuário autenticado não possui permissão para esta ação.',
     }),
   );
-
-  // Suporte a chamada sem parênteses: @Authorize
-  if (
-    args.length >= 1 &&
-    (typeof args[0] === 'function' || typeof args[0] === 'object')
-  ) {
-    return (decorator as any)(...args);
-  }
-
-  // Suporte a chamada com parênteses: @Authorize()
-  return decorator;
 }

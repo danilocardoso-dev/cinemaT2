@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -19,7 +20,9 @@ async function bootstrap() {
   // Configuração do Swagger com suporte a Bearer Token (Authorize)
   const config = new DocumentBuilder()
     .setTitle('Cinema API')
-    .setDescription('Documentação da API de Cinema com NestJS, Prisma e Autenticação JWT')
+    .setDescription(
+      'Documentação da API de Cinema com NestJS, Prisma e Autenticação JWT',
+    )
     .setVersion('1.0')
     .addTag('auth', 'Autenticação e geração de token JWT')
     .addTag('usuarios', 'Gestão de Usuários')
@@ -36,12 +39,12 @@ async function bootstrap() {
         scheme: 'bearer',
         bearerFormat: 'JWT',
         name: 'Authorization',
-        description: 'Insira o token JWT gerado em /auth/login no formato: Bearer <seu_token>',
+        description:
+          'Insira o token JWT gerado em /auth/login no formato: Bearer <seu_token>',
         in: 'header',
       },
       'JWT-auth',
     )
-    .addBearerAuth() // Registra também com identificador padrão 'bearer' compatível com @ApiBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -51,4 +54,4 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}/api`);
 }
-bootstrap();
+void bootstrap();

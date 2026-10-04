@@ -1,8 +1,13 @@
-import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { IS_PUBLIC_KEY } from './decorators/public.decorator';
+import type { AuthenticatedUser } from './jwt.strategy';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -25,15 +30,20 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  handleRequest(err: any, user: any, info: any) {
-    if (err || !user) {
-      throw (
-        err ||
-        new UnauthorizedException(
-          'Acesso não autorizado. Token JWT ausente, expirado ou inválido.',
-        )
+  handleRequest<TUser = AuthenticatedUser>(
+    err: Error | null,
+    user: TUser | false | null,
+  ): TUser {
+    if (err) {
+      throw err;
+    }
+
+    if (!user) {
+      throw new UnauthorizedException(
+        'Acesso não autorizado. Token JWT ausente, expirado ou inválido.',
       );
     }
+
     return user;
   }
 }

@@ -5,21 +5,21 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { getJwtExpiresIn, getJwtSecret } from './jwt.config';
 
 @Module({
   imports: [
     PrismaModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'cinema_secret_jwt_key_2026',
+      secret: getJwtSecret(),
       signOptions: {
-        expiresIn: (process.env.JWT_EXPIRES_IN as any) || '1d',
+        expiresIn: getJwtExpiresIn(),
       },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard],
-  exports: [AuthService, JwtAuthGuard, JwtModule, PassportModule],
+  providers: [AuthService, JwtStrategy],
+  exports: [AuthService, JwtModule, PassportModule],
 })
 export class AuthModule {}

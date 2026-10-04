@@ -10,9 +10,10 @@ import {
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { CreateUsuarioDto } from '../usuarios/dto/create-usuario.dto';
+import { RegisterDto } from './dto/register.dto';
 import { Authorize } from './decorators/authorize.decorator';
 import { Public } from './decorators/public.decorator';
+import { AuthenticatedUser } from './jwt.strategy';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -24,11 +25,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Realizar login e gerar token JWT',
-    description: 'Autentica o usuário com e-mail e senha e retorna o token de acesso Bearer JWT.',
+    description:
+      'Autentica o usuário com e-mail e senha e retorna o token de acesso Bearer JWT.',
   })
   @ApiResponse({
     status: 200,
-    description: 'Login realizado com sucesso. Retorna o token JWT e dados do usuário.',
+    description:
+      'Login realizado com sucesso. Retorna o token JWT e dados do usuário.',
   })
   @ApiResponse({
     status: 401,
@@ -42,7 +45,8 @@ export class AuthController {
   @Post('register')
   @ApiOperation({
     summary: 'Registrar novo usuário e gerar token JWT',
-    description: 'Cria uma nova conta de usuário com senha criptografada e retorna o token JWT.',
+    description:
+      'Cria uma nova conta de usuário com senha criptografada e retorna o token JWT.',
   })
   @ApiResponse({
     status: 201,
@@ -52,15 +56,16 @@ export class AuthController {
     status: 409,
     description: 'E-mail já cadastrado.',
   })
-  async register(@Body() createUsuarioDto: CreateUsuarioDto) {
-    return this.authService.register(createUsuarioDto);
+  async register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto);
   }
 
   @Authorize()
   @Get('me')
   @ApiOperation({
     summary: 'Consultar dados do usuário autenticado',
-    description: 'Retorna as informações do usuário atual extraídas do token JWT.',
+    description:
+      'Retorna as informações do usuário atual extraídas do token JWT.',
   })
   @ApiResponse({
     status: 200,
@@ -70,7 +75,7 @@ export class AuthController {
     status: 401,
     description: 'Não autorizado. Token ausente ou inválido.',
   })
-  getProfile(@Request() req: any) {
+  getProfile(@Request() req: { user: AuthenticatedUser }) {
     return req.user;
   }
 }

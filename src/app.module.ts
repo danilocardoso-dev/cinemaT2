@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -19,6 +20,8 @@ import { LanchesModule } from './lanches/lanches.module';
 import { PedidosModule } from './pedidos/pedidos.module';
 import { SalasModule } from './salas/salas.module';
 import { SessoesModule } from './sessoes/sessoes.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { RolesGuard } from './auth/roles.guard';
 
 @Module({
   imports: [
@@ -44,6 +47,14 @@ import { SessoesModule } from './sessoes/sessoes.module';
     SalasService,
     SessoesService,
     UsuariosService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AppModule {}

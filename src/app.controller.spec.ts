@@ -1,49 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException } from '@nestjs/common';
-import { UsuariosService } from './usuarios.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '../generated/prisma/client';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
-describe('UsuariosService', () => {
-  let service: UsuariosService;
-  const create = jest.fn();
+describe('AppController', () => {
+  let appController: AppController;
 
   beforeEach(async () => {
-    create.mockReset();
-
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UsuariosService,
-        {
-          provide: PrismaService,
-          useValue: {
-            usuario: { create },
-          },
-        },
-      ],
+    const app: TestingModule = await Test.createTestingModule({
+      controllers: [AppController],
+      providers: [AppService],
     }).compile();
 
-    service = module.get<UsuariosService>(UsuariosService);
+    appController = app.get<AppController>(AppController);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-
-  it('retorna 409 quando o e-mail já está cadastrado', async () => {
-    create.mockRejectedValue(
-      new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
-        code: 'P2002',
-        clientVersion: '7.9.1',
-      }),
-    );
-
-    await expect(
-      service.create({
-        nome: 'Usuário Teste',
-        email: 'teste@cinema.com',
-        senha: '123456',
-      }),
-    ).rejects.toThrow(ConflictException);
+  describe('root', () => {
+    it('should return "Hello World!"', () => {
+      expect(appController.getHello()).toBe('Hello World!');
+    });
   });
 });

@@ -12,12 +12,14 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Authorize } from '../auth/decorators/authorize.decorator';
+import { CargoUsuario } from '../generated/prisma/client';
 
 @ApiTags('usuarios')
 @Controller('usuarios')
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
+  @Authorize(CargoUsuario.ADMIN)
   @Post()
   @ApiOperation({ summary: 'Criar um novo usuário' })
   @ApiResponse({ status: 201, description: 'Usuário criado com sucesso.' })
@@ -31,7 +33,7 @@ export class UsuariosController {
     return this.usuariosService.create(createUsuarioDto);
   }
 
-  @Authorize()
+  @Authorize(CargoUsuario.ADMIN)
   @Get()
   @ApiOperation({ summary: 'Listar todos os usuários' })
   @ApiResponse({
@@ -43,7 +45,7 @@ export class UsuariosController {
     return this.usuariosService.findAll();
   }
 
-  @Authorize()
+  @Authorize(CargoUsuario.ADMIN)
   @Get(':id')
   @ApiOperation({ summary: 'Buscar um usuário pelo ID' })
   @ApiResponse({ status: 200, description: 'Usuário encontrado com sucesso.' })
@@ -52,7 +54,7 @@ export class UsuariosController {
     return this.usuariosService.findOne(+id);
   }
 
-  @Authorize()
+  @Authorize(CargoUsuario.ADMIN)
   @Patch(':id')
   @ApiOperation({ summary: 'Atualizar um usuário' })
   @ApiResponse({ status: 200, description: 'Usuário atualizado com sucesso.' })
@@ -61,7 +63,7 @@ export class UsuariosController {
     return this.usuariosService.update(+id, updateUsuarioDto);
   }
 
-  @Authorize()
+  @Authorize(CargoUsuario.ADMIN)
   @Delete(':id')
   @ApiOperation({ summary: 'Remover um usuário' })
   @ApiResponse({ status: 200, description: 'Usuário removido com sucesso.' })
