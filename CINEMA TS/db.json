@@ -1,0 +1,69 @@
+{
+  "filmes": [
+    {
+      "titulo": "Harry Potter",
+      "sinopse": "filme bom!!",
+      "classificacao": "12",
+      "duracao": 120,
+      "genero": "Ficção Científica",
+      "datasExibicao": "12/12/2025 a 12/01/2026",
+      "id": 1
+    }
+  ],
+  "salas": [
+    {
+      "numero": 1,
+      "capacidade": 120,
+      "id": 1
+    }
+  ],
+  "sessoes": [
+    {
+      "filmeId": 1,
+      "salaId": 1,
+      "dataHora": "2025-12-12T14:20",
+      "id": 1
+    }
+  ],
+  "lanches": [
+    {
+      "nome": "Pipoca",
+      "descricao": "pipoca doce",
+      "valorUnitario": 15,
+      "qtUnidade": 3,
+      "subtotal": 0,
+      "id": 1
+    }
+  ],
+  "pedidos": [
+    {
+      "qtInteira": 1,
+      "qtMeia": 1,
+      "ingressos": [
+        {
+          "sessaoId": 1,
+          "tipo": "inteira",
+          "valor": 40
+        },
+        {
+          "sessaoId": 1,
+          "tipo": "meia",
+          "valor": 20
+        }
+      ],
+      "lanches": [
+        {
+          "nome": "Pipoca",
+          "descricao": "pipoca doce",
+          "valorUnitario": 15,
+          "qtUnidade": 1,
+          "subtotal": 15,
+          "id": 1
+        }
+      ],
+      "valorTotal": 75,
+      "id": 1
+    }
+  ],
+  "ingressos": []
+}
