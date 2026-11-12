@@ -275,6 +275,7 @@ export type LancheOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   itensPedido?: Prisma.ItemPedidoLancheOrderByRelationAggregateInput
+  _relevance?: Prisma.LancheOrderByRelevanceInput
 }
 
 export type LancheWhereUniqueInput = Prisma.AtLeast<{
@@ -408,6 +409,12 @@ export type LancheUncheckedUpdateManyInput = {
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LancheOrderByRelevanceInput = {
+  fields: Prisma.LancheOrderByRelevanceFieldEnum | Prisma.LancheOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type LancheCountOrderByAggregateInput = {
@@ -586,29 +593,7 @@ export type LancheSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   _count?: boolean | Prisma.LancheCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lanche"]>
 
-export type LancheSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  nome?: boolean
-  descricao?: boolean
-  valorUnitario?: boolean
-  qtUnidade?: boolean
-  subtotal?: boolean
-  ativo?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-}, ExtArgs["result"]["lanche"]>
 
-export type LancheSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  nome?: boolean
-  descricao?: boolean
-  valorUnitario?: boolean
-  qtUnidade?: boolean
-  subtotal?: boolean
-  ativo?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-}, ExtArgs["result"]["lanche"]>
 
 export type LancheSelectScalar = {
   id?: boolean
@@ -627,8 +612,6 @@ export type LancheInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   itensPedido?: boolean | Prisma.Lanche$itensPedidoArgs<ExtArgs>
   _count?: boolean | Prisma.LancheCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type LancheIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type LancheIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $LanchePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Lanche"
@@ -763,30 +746,6 @@ export interface LancheDelegate<ExtArgs extends runtime.Types.Extensions.Interna
   createMany<T extends LancheCreateManyArgs>(args?: Prisma.SelectSubset<T, LancheCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many Lanches and returns the data saved in the database.
-   * @param {LancheCreateManyAndReturnArgs} args - Arguments to create many Lanches.
-   * @example
-   * // Create many Lanches
-   * const lanche = await prisma.lanche.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many Lanches and only return the `id`
-   * const lancheWithIdOnly = await prisma.lanche.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends LancheCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, LancheCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LanchePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a Lanche.
    * @param {LancheDeleteArgs} args - Arguments to delete one Lanche.
    * @example
@@ -849,36 +808,6 @@ export interface LancheDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * 
    */
   updateMany<T extends LancheUpdateManyArgs>(args: Prisma.SelectSubset<T, LancheUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more Lanches and returns the data updated in the database.
-   * @param {LancheUpdateManyAndReturnArgs} args - Arguments to update many Lanches.
-   * @example
-   * // Update many Lanches
-   * const lanche = await prisma.lanche.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more Lanches and only return the `id`
-   * const lancheWithIdOnly = await prisma.lanche.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends LancheUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, LancheUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LanchePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Lanche.
@@ -1316,25 +1245,6 @@ export type LancheCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Lanche createManyAndReturn
- */
-export type LancheCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Lanche
-   */
-  select?: Prisma.LancheSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Lanche
-   */
-  omit?: Prisma.LancheOmit<ExtArgs> | null
-  /**
-   * The data used to create many Lanches.
-   */
-  data: Prisma.LancheCreateManyInput | Prisma.LancheCreateManyInput[]
-  skipDuplicates?: boolean
-}
-
-/**
  * Lanche update
  */
 export type LancheUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1364,32 +1274,6 @@ export type LancheUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
  * Lanche updateMany
  */
 export type LancheUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The data used to update Lanches.
-   */
-  data: Prisma.XOR<Prisma.LancheUpdateManyMutationInput, Prisma.LancheUncheckedUpdateManyInput>
-  /**
-   * Filter which Lanches to update
-   */
-  where?: Prisma.LancheWhereInput
-  /**
-   * Limit how many Lanches to update.
-   */
-  limit?: number
-}
-
-/**
- * Lanche updateManyAndReturn
- */
-export type LancheUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Lanche
-   */
-  select?: Prisma.LancheSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Lanche
-   */
-  omit?: Prisma.LancheOmit<ExtArgs> | null
   /**
    * The data used to update Lanches.
    */

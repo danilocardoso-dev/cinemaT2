@@ -9,7 +9,7 @@ O backend utiliza a arquitetura modular do NestJS:
 ```text
 Requisição HTTP
       ↓
-Controller → DTO e validação → Service → Prisma → PostgreSQL
+Controller → DTO e validação → Service → Prisma → MySQL
       ↓                         ↓
    Swagger                 Regras de negócio
 ```
@@ -21,7 +21,7 @@ Cada recurso possui seu próprio módulo, controller, service, DTOs e testes. Os
 - `filmes`, `salas` e `sessoes`: programação do cinema;
 - `lanches`: produtos e estoque da bomboniere;
 - `pedidos`, `ingressos` e `itens_pedido_lanche`: fluxo de vendas;
-- `prisma`: conexão centralizada com o PostgreSQL.
+- `prisma`: conexão centralizada com o MySQL.
 
 ## Por que essa arquitetura foi escolhida
 
@@ -29,7 +29,7 @@ Cada recurso possui seu próprio módulo, controller, service, DTOs e testes. Os
 - **Manutenção:** alterações em um recurso ficam concentradas no seu módulo.
 - **Validação:** os DTOs rejeitam dados inválidos antes de chegarem às regras de negócio.
 - **Segurança:** autenticação e perfis são aplicados globalmente por guards.
-- **Persistência:** o Prisma mantém o schema, as migrations e o acesso ao PostgreSQL no mesmo padrão.
+- **Persistência:** o Prisma mantém o schema, as migrations e o acesso ao MySQL no mesmo padrão.
 - **Apresentação:** o Swagger permite demonstrar e testar cada endpoint sem depender do frontend.
 
 Para um projeto de faculdade, essa separação mostra de forma direta conceitos de API REST, orientação a módulos, autenticação, autorização e banco relacional.
@@ -74,7 +74,7 @@ Filme ──< Sessao >── Sala
 As migrations ficam em `prisma/migrations` e devem ser aplicadas com:
 
 ```bash
-npx prisma migrate deploy
+npx prisma db push
 ```
 
 ## Configuração
@@ -82,7 +82,7 @@ npx prisma migrate deploy
 Crie o `.env` a partir de `.env.example`:
 
 ```env
-DATABASE_URL="postgresql://postgres:SUA_SENHA@localhost:5432/cinema2?schema=public"
+DATABASE_URL="mysql://root:@localhost:3306/cinema2"
 JWT_SECRET="uma-chave-com-pelo-menos-32-caracteres"
 JWT_EXPIRES_IN="1d"
 PORT=3000
@@ -93,7 +93,7 @@ PORT=3000
 ```bash
 npm install                 # instala as dependências
 npx prisma generate         # gera o Prisma Client
-npx prisma migrate deploy   # aplica as migrations
+npx prisma db push   # cria as tabelas no MySQL
 npm run start:dev           # inicia em desenvolvimento
 npm run build               # gera a versão compilada
 npm run start:prod          # executa a versão compilada

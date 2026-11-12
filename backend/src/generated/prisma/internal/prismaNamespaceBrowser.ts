@@ -194,12 +194,23 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
+export const FilmeOrderByRelevanceFieldEnum = {
+  titulo: 'titulo',
+  sinopse: 'sinopse',
+  classificacao: 'classificacao',
+  genero: 'genero',
+  datasExibicao: 'datasExibicao'
 } as const
 
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+export type FilmeOrderByRelevanceFieldEnum = (typeof FilmeOrderByRelevanceFieldEnum)[keyof typeof FilmeOrderByRelevanceFieldEnum]
+
+
+export const LancheOrderByRelevanceFieldEnum = {
+  nome: 'nome',
+  descricao: 'descricao'
+} as const
+
+export type LancheOrderByRelevanceFieldEnum = (typeof LancheOrderByRelevanceFieldEnum)[keyof typeof LancheOrderByRelevanceFieldEnum]
 
 
 export const NullsOrder = {
@@ -208,4 +219,20 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const IngressoOrderByRelevanceFieldEnum = {
+  assento: 'assento'
+} as const
+
+export type IngressoOrderByRelevanceFieldEnum = (typeof IngressoOrderByRelevanceFieldEnum)[keyof typeof IngressoOrderByRelevanceFieldEnum]
+
+
+export const UsuarioOrderByRelevanceFieldEnum = {
+  nome: 'nome',
+  email: 'email',
+  senha: 'senha'
+} as const
+
+export type UsuarioOrderByRelevanceFieldEnum = (typeof UsuarioOrderByRelevanceFieldEnum)[keyof typeof UsuarioOrderByRelevanceFieldEnum]
 

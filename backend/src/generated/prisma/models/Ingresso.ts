@@ -259,6 +259,7 @@ export type IngressoOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   sessao?: Prisma.SessaoOrderByWithRelationInput
   pedido?: Prisma.PedidoOrderByWithRelationInput
+  _relevance?: Prisma.IngressoOrderByRelevanceInput
 }
 
 export type IngressoWhereUniqueInput = Prisma.AtLeast<{
@@ -378,6 +379,12 @@ export type IngressoListRelationFilter = {
 
 export type IngressoOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type IngressoOrderByRelevanceInput = {
+  fields: Prisma.IngressoOrderByRelevanceFieldEnum | Prisma.IngressoOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type IngressoSessaoIdAssentoCompoundUniqueInput = {
@@ -704,29 +711,7 @@ export type IngressoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   pedido?: boolean | Prisma.Ingresso$pedidoArgs<ExtArgs>
 }, ExtArgs["result"]["ingresso"]>
 
-export type IngressoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  sessaoId?: boolean
-  pedidoId?: boolean
-  tipo?: boolean
-  valor?: boolean
-  assento?: boolean
-  createdAt?: boolean
-  sessao?: boolean | Prisma.SessaoDefaultArgs<ExtArgs>
-  pedido?: boolean | Prisma.Ingresso$pedidoArgs<ExtArgs>
-}, ExtArgs["result"]["ingresso"]>
 
-export type IngressoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  sessaoId?: boolean
-  pedidoId?: boolean
-  tipo?: boolean
-  valor?: boolean
-  assento?: boolean
-  createdAt?: boolean
-  sessao?: boolean | Prisma.SessaoDefaultArgs<ExtArgs>
-  pedido?: boolean | Prisma.Ingresso$pedidoArgs<ExtArgs>
-}, ExtArgs["result"]["ingresso"]>
 
 export type IngressoSelectScalar = {
   id?: boolean
@@ -740,14 +725,6 @@ export type IngressoSelectScalar = {
 
 export type IngressoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessaoId" | "pedidoId" | "tipo" | "valor" | "assento" | "createdAt", ExtArgs["result"]["ingresso"]>
 export type IngressoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  sessao?: boolean | Prisma.SessaoDefaultArgs<ExtArgs>
-  pedido?: boolean | Prisma.Ingresso$pedidoArgs<ExtArgs>
-}
-export type IngressoIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  sessao?: boolean | Prisma.SessaoDefaultArgs<ExtArgs>
-  pedido?: boolean | Prisma.Ingresso$pedidoArgs<ExtArgs>
-}
-export type IngressoIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessao?: boolean | Prisma.SessaoDefaultArgs<ExtArgs>
   pedido?: boolean | Prisma.Ingresso$pedidoArgs<ExtArgs>
 }
@@ -884,30 +861,6 @@ export interface IngressoDelegate<ExtArgs extends runtime.Types.Extensions.Inter
   createMany<T extends IngressoCreateManyArgs>(args?: Prisma.SelectSubset<T, IngressoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many Ingressos and returns the data saved in the database.
-   * @param {IngressoCreateManyAndReturnArgs} args - Arguments to create many Ingressos.
-   * @example
-   * // Create many Ingressos
-   * const ingresso = await prisma.ingresso.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many Ingressos and only return the `id`
-   * const ingressoWithIdOnly = await prisma.ingresso.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends IngressoCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, IngressoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IngressoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a Ingresso.
    * @param {IngressoDeleteArgs} args - Arguments to delete one Ingresso.
    * @example
@@ -970,36 +923,6 @@ export interface IngressoDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * 
    */
   updateMany<T extends IngressoUpdateManyArgs>(args: Prisma.SelectSubset<T, IngressoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more Ingressos and returns the data updated in the database.
-   * @param {IngressoUpdateManyAndReturnArgs} args - Arguments to update many Ingressos.
-   * @example
-   * // Update many Ingressos
-   * const ingresso = await prisma.ingresso.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more Ingressos and only return the `id`
-   * const ingressoWithIdOnly = await prisma.ingresso.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends IngressoUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, IngressoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IngressoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Ingresso.
@@ -1436,29 +1359,6 @@ export type IngressoCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Ingresso createManyAndReturn
- */
-export type IngressoCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Ingresso
-   */
-  select?: Prisma.IngressoSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Ingresso
-   */
-  omit?: Prisma.IngressoOmit<ExtArgs> | null
-  /**
-   * The data used to create many Ingressos.
-   */
-  data: Prisma.IngressoCreateManyInput | Prisma.IngressoCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.IngressoIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * Ingresso update
  */
 export type IngressoUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1500,36 +1400,6 @@ export type IngressoUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Ingressos to update.
    */
   limit?: number
-}
-
-/**
- * Ingresso updateManyAndReturn
- */
-export type IngressoUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Ingresso
-   */
-  select?: Prisma.IngressoSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Ingresso
-   */
-  omit?: Prisma.IngressoOmit<ExtArgs> | null
-  /**
-   * The data used to update Ingressos.
-   */
-  data: Prisma.XOR<Prisma.IngressoUpdateManyMutationInput, Prisma.IngressoUncheckedUpdateManyInput>
-  /**
-   * Filter which Ingressos to update
-   */
-  where?: Prisma.IngressoWhereInput
-  /**
-   * Limit how many Ingressos to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.IngressoIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

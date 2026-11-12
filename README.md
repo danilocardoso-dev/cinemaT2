@@ -4,7 +4,7 @@ Sistema web acadêmico para gerenciamento de cinema. O projeto reúne cadastro d
 
 O repositório contém as duas aplicações necessárias:
 
-- `backend`: API REST em NestJS, Prisma e PostgreSQL;
+- `backend`: API REST em NestJS, Prisma e MySQL (XAMPP);
 - `frontend`: interface em React, TypeScript e Vite.
 
 ## Tecnologias
@@ -13,7 +13,7 @@ O repositório contém as duas aplicações necessárias:
 - NestJS 11
 - React 18 e TypeScript
 - Prisma ORM 7
-- PostgreSQL
+- MySQL/MariaDB (XAMPP)
 - JWT para autenticação
 - Swagger para documentação e testes da API
 
@@ -26,12 +26,12 @@ git clone (link do repositorio)
 cd cinemaT2
 ```
 
-### 2. Preparar o PostgreSQL
+### 2. Preparar o MySQL (XAMPP)
 
-Crie um banco vazio chamado `cinema2`. Depois, dentro de `backend`, copie `.env.example` para `.env` e ajuste os dados da conexão:
+Inicie o MySQL no painel do XAMPP e crie um banco vazio chamado `cinema2` (phpMyAdmin ou `CREATE DATABASE cinema2;`). Depois, dentro de `backend`, copie `.env.example` para `.env` e ajuste os dados da conexão:
 
 ```env
-DATABASE_URL="postgresql://postgres:SUA_SENHA@localhost:5432/cinema2?schema=public"
+DATABASE_URL="mysql://root:@localhost:3306/cinema2"
 JWT_SECRET="uma-chave-com-pelo-menos-32-caracteres"
 JWT_EXPIRES_IN="1d"
 PORT=3000
@@ -45,7 +45,7 @@ O arquivo `.env` contém dados locais e não é enviado ao Git.
 cd backend
 npm install
 npx prisma generate
-npx prisma migrate deploy
+npx prisma db push
 npm run start:dev
 ```
 
@@ -56,7 +56,7 @@ npm run start:dev
 
 No Swagger, execute `POST /auth/register`. O cadastro público sempre cria um usuário com perfil `CLIENTE`.
 
-Para transformar o primeiro usuário em administrador, execute no PostgreSQL, substituindo o e-mail:
+Para transformar o primeiro usuário em administrador, execute no MySQL, substituindo o e-mail:
 
 ```sql
 UPDATE usuarios
@@ -101,7 +101,7 @@ As permissões visuais do frontend melhoram a experiência, mas a validação de
 5. Mostre que um perfil sem permissão recebe `403`.
 6. Entre no frontend com o mesmo usuário.
 7. Cadastre um filme, sala, sessão ou lanche.
-8. Consulte a tabela correspondente no PostgreSQL para mostrar o dado persistido.
+8. Consulte a tabela correspondente no MySQL para mostrar o dado persistido.
 
 ## Validação do projeto
 
