@@ -17,7 +17,7 @@ As permissões seguem o painel web; a validação de segurança continua sendo f
 
 ## Como rodar
 
-1. Suba o backend (veja o README da raiz): MySQL do XAMPP ligado e `npm run start:dev` em `backend`.
+1. Suba o backend (veja o README da raiz): `npm run db:dev` (PostgreSQL), `npx prisma migrate deploy` e `npm run start:dev` em `backend`. Para ter usuários de teste: `npm run db:seed-dev`.
 2. Neste diretório:
 
 ```bash
@@ -29,8 +29,9 @@ npx expo start
 
 ### Endereço da API
 
-Por padrão: `http://localhost:3000` (web/iOS) e `http://10.0.2.2:3000` (emulador Android).
-Em celular físico, crie `mobile/.env` com o IP do computador na mesma rede:
+O app descobre sozinho o IP do computador (o mesmo que serve o app via Expo) e usa a porta 3000;
+no navegador usa `http://localhost:3000`. O celular e o computador precisam estar na mesma rede.
+Para forçar outro endereço, crie `mobile/.env`:
 
 ```env
 EXPO_PUBLIC_API_URL=http://192.168.0.10:3000

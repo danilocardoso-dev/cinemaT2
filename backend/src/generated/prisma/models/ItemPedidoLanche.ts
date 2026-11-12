@@ -701,7 +701,29 @@ export type ItemPedidoLancheSelect<ExtArgs extends runtime.Types.Extensions.Inte
   lanche?: boolean | Prisma.LancheDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["itemPedidoLanche"]>
 
+export type ItemPedidoLancheSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  pedidoId?: boolean
+  lancheId?: boolean
+  quantidade?: boolean
+  valorUnitario?: boolean
+  subtotal?: boolean
+  createdAt?: boolean
+  pedido?: boolean | Prisma.PedidoDefaultArgs<ExtArgs>
+  lanche?: boolean | Prisma.LancheDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["itemPedidoLanche"]>
 
+export type ItemPedidoLancheSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  pedidoId?: boolean
+  lancheId?: boolean
+  quantidade?: boolean
+  valorUnitario?: boolean
+  subtotal?: boolean
+  createdAt?: boolean
+  pedido?: boolean | Prisma.PedidoDefaultArgs<ExtArgs>
+  lanche?: boolean | Prisma.LancheDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["itemPedidoLanche"]>
 
 export type ItemPedidoLancheSelectScalar = {
   id?: boolean
@@ -715,6 +737,14 @@ export type ItemPedidoLancheSelectScalar = {
 
 export type ItemPedidoLancheOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "pedidoId" | "lancheId" | "quantidade" | "valorUnitario" | "subtotal" | "createdAt", ExtArgs["result"]["itemPedidoLanche"]>
 export type ItemPedidoLancheInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  pedido?: boolean | Prisma.PedidoDefaultArgs<ExtArgs>
+  lanche?: boolean | Prisma.LancheDefaultArgs<ExtArgs>
+}
+export type ItemPedidoLancheIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  pedido?: boolean | Prisma.PedidoDefaultArgs<ExtArgs>
+  lanche?: boolean | Prisma.LancheDefaultArgs<ExtArgs>
+}
+export type ItemPedidoLancheIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pedido?: boolean | Prisma.PedidoDefaultArgs<ExtArgs>
   lanche?: boolean | Prisma.LancheDefaultArgs<ExtArgs>
 }
@@ -851,6 +881,30 @@ export interface ItemPedidoLancheDelegate<ExtArgs extends runtime.Types.Extensio
   createMany<T extends ItemPedidoLancheCreateManyArgs>(args?: Prisma.SelectSubset<T, ItemPedidoLancheCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many ItemPedidoLanches and returns the data saved in the database.
+   * @param {ItemPedidoLancheCreateManyAndReturnArgs} args - Arguments to create many ItemPedidoLanches.
+   * @example
+   * // Create many ItemPedidoLanches
+   * const itemPedidoLanche = await prisma.itemPedidoLanche.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many ItemPedidoLanches and only return the `id`
+   * const itemPedidoLancheWithIdOnly = await prisma.itemPedidoLanche.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends ItemPedidoLancheCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ItemPedidoLancheCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPedidoLanchePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a ItemPedidoLanche.
    * @param {ItemPedidoLancheDeleteArgs} args - Arguments to delete one ItemPedidoLanche.
    * @example
@@ -913,6 +967,36 @@ export interface ItemPedidoLancheDelegate<ExtArgs extends runtime.Types.Extensio
    * 
    */
   updateMany<T extends ItemPedidoLancheUpdateManyArgs>(args: Prisma.SelectSubset<T, ItemPedidoLancheUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more ItemPedidoLanches and returns the data updated in the database.
+   * @param {ItemPedidoLancheUpdateManyAndReturnArgs} args - Arguments to update many ItemPedidoLanches.
+   * @example
+   * // Update many ItemPedidoLanches
+   * const itemPedidoLanche = await prisma.itemPedidoLanche.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more ItemPedidoLanches and only return the `id`
+   * const itemPedidoLancheWithIdOnly = await prisma.itemPedidoLanche.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends ItemPedidoLancheUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ItemPedidoLancheUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPedidoLanchePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one ItemPedidoLanche.
@@ -1349,6 +1433,29 @@ export type ItemPedidoLancheCreateManyArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
+ * ItemPedidoLanche createManyAndReturn
+ */
+export type ItemPedidoLancheCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ItemPedidoLanche
+   */
+  select?: Prisma.ItemPedidoLancheSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the ItemPedidoLanche
+   */
+  omit?: Prisma.ItemPedidoLancheOmit<ExtArgs> | null
+  /**
+   * The data used to create many ItemPedidoLanches.
+   */
+  data: Prisma.ItemPedidoLancheCreateManyInput | Prisma.ItemPedidoLancheCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemPedidoLancheIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * ItemPedidoLanche update
  */
 export type ItemPedidoLancheUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1390,6 +1497,36 @@ export type ItemPedidoLancheUpdateManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many ItemPedidoLanches to update.
    */
   limit?: number
+}
+
+/**
+ * ItemPedidoLanche updateManyAndReturn
+ */
+export type ItemPedidoLancheUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ItemPedidoLanche
+   */
+  select?: Prisma.ItemPedidoLancheSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the ItemPedidoLanche
+   */
+  omit?: Prisma.ItemPedidoLancheOmit<ExtArgs> | null
+  /**
+   * The data used to update ItemPedidoLanches.
+   */
+  data: Prisma.XOR<Prisma.ItemPedidoLancheUpdateManyMutationInput, Prisma.ItemPedidoLancheUncheckedUpdateManyInput>
+  /**
+   * Filter which ItemPedidoLanches to update
+   */
+  where?: Prisma.ItemPedidoLancheWhereInput
+  /**
+   * Limit how many ItemPedidoLanches to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemPedidoLancheIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

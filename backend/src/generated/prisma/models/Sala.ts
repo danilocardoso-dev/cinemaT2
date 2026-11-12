@@ -472,7 +472,21 @@ export type SalaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   _count?: boolean | Prisma.SalaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sala"]>
 
+export type SalaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  numero?: boolean
+  capacidade?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+}, ExtArgs["result"]["sala"]>
 
+export type SalaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  numero?: boolean
+  capacidade?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+}, ExtArgs["result"]["sala"]>
 
 export type SalaSelectScalar = {
   id?: boolean
@@ -487,6 +501,8 @@ export type SalaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   sessoes?: boolean | Prisma.Sala$sessoesArgs<ExtArgs>
   _count?: boolean | Prisma.SalaCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type SalaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type SalaIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $SalaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Sala"
@@ -617,6 +633,30 @@ export interface SalaDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
   createMany<T extends SalaCreateManyArgs>(args?: Prisma.SelectSubset<T, SalaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Salas and returns the data saved in the database.
+   * @param {SalaCreateManyAndReturnArgs} args - Arguments to create many Salas.
+   * @example
+   * // Create many Salas
+   * const sala = await prisma.sala.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Salas and only return the `id`
+   * const salaWithIdOnly = await prisma.sala.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends SalaCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SalaCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalaPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Sala.
    * @param {SalaDeleteArgs} args - Arguments to delete one Sala.
    * @example
@@ -679,6 +719,36 @@ export interface SalaDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
    * 
    */
   updateMany<T extends SalaUpdateManyArgs>(args: Prisma.SelectSubset<T, SalaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Salas and returns the data updated in the database.
+   * @param {SalaUpdateManyAndReturnArgs} args - Arguments to update many Salas.
+   * @example
+   * // Update many Salas
+   * const sala = await prisma.sala.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Salas and only return the `id`
+   * const salaWithIdOnly = await prisma.sala.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends SalaUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SalaUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalaPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Sala.
@@ -1112,6 +1182,25 @@ export type SalaCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Sala createManyAndReturn
+ */
+export type SalaCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Sala
+   */
+  select?: Prisma.SalaSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Sala
+   */
+  omit?: Prisma.SalaOmit<ExtArgs> | null
+  /**
+   * The data used to create many Salas.
+   */
+  data: Prisma.SalaCreateManyInput | Prisma.SalaCreateManyInput[]
+  skipDuplicates?: boolean
+}
+
+/**
  * Sala update
  */
 export type SalaUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1141,6 +1230,32 @@ export type SalaUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
  * Sala updateMany
  */
 export type SalaUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update Salas.
+   */
+  data: Prisma.XOR<Prisma.SalaUpdateManyMutationInput, Prisma.SalaUncheckedUpdateManyInput>
+  /**
+   * Filter which Salas to update
+   */
+  where?: Prisma.SalaWhereInput
+  /**
+   * Limit how many Salas to update.
+   */
+  limit?: number
+}
+
+/**
+ * Sala updateManyAndReturn
+ */
+export type SalaUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Sala
+   */
+  select?: Prisma.SalaSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Sala
+   */
+  omit?: Prisma.SalaOmit<ExtArgs> | null
   /**
    * The data used to update Salas.
    */

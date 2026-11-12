@@ -842,7 +842,29 @@ export type PedidoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   _count?: boolean | Prisma.PedidoCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pedido"]>
 
+export type PedidoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  qtInteira?: boolean
+  qtMeia?: boolean
+  valorTotal?: boolean
+  status?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  usuarioId?: boolean
+  usuario?: boolean | Prisma.Pedido$usuarioArgs<ExtArgs>
+}, ExtArgs["result"]["pedido"]>
 
+export type PedidoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  qtInteira?: boolean
+  qtMeia?: boolean
+  valorTotal?: boolean
+  status?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  usuarioId?: boolean
+  usuario?: boolean | Prisma.Pedido$usuarioArgs<ExtArgs>
+}, ExtArgs["result"]["pedido"]>
 
 export type PedidoSelectScalar = {
   id?: boolean
@@ -861,6 +883,12 @@ export type PedidoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   lanches?: boolean | Prisma.Pedido$lanchesArgs<ExtArgs>
   usuario?: boolean | Prisma.Pedido$usuarioArgs<ExtArgs>
   _count?: boolean | Prisma.PedidoCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type PedidoIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  usuario?: boolean | Prisma.Pedido$usuarioArgs<ExtArgs>
+}
+export type PedidoIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  usuario?: boolean | Prisma.Pedido$usuarioArgs<ExtArgs>
 }
 
 export type $PedidoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -997,6 +1025,30 @@ export interface PedidoDelegate<ExtArgs extends runtime.Types.Extensions.Interna
   createMany<T extends PedidoCreateManyArgs>(args?: Prisma.SelectSubset<T, PedidoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Pedidos and returns the data saved in the database.
+   * @param {PedidoCreateManyAndReturnArgs} args - Arguments to create many Pedidos.
+   * @example
+   * // Create many Pedidos
+   * const pedido = await prisma.pedido.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Pedidos and only return the `id`
+   * const pedidoWithIdOnly = await prisma.pedido.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends PedidoCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, PedidoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PedidoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Pedido.
    * @param {PedidoDeleteArgs} args - Arguments to delete one Pedido.
    * @example
@@ -1059,6 +1111,36 @@ export interface PedidoDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * 
    */
   updateMany<T extends PedidoUpdateManyArgs>(args: Prisma.SelectSubset<T, PedidoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Pedidos and returns the data updated in the database.
+   * @param {PedidoUpdateManyAndReturnArgs} args - Arguments to update many Pedidos.
+   * @example
+   * // Update many Pedidos
+   * const pedido = await prisma.pedido.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Pedidos and only return the `id`
+   * const pedidoWithIdOnly = await prisma.pedido.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends PedidoUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, PedidoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PedidoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Pedido.
@@ -1497,6 +1579,29 @@ export type PedidoCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * Pedido createManyAndReturn
+ */
+export type PedidoCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Pedido
+   */
+  select?: Prisma.PedidoSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Pedido
+   */
+  omit?: Prisma.PedidoOmit<ExtArgs> | null
+  /**
+   * The data used to create many Pedidos.
+   */
+  data: Prisma.PedidoCreateManyInput | Prisma.PedidoCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PedidoIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * Pedido update
  */
 export type PedidoUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1538,6 +1643,36 @@ export type PedidoUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Pedidos to update.
    */
   limit?: number
+}
+
+/**
+ * Pedido updateManyAndReturn
+ */
+export type PedidoUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Pedido
+   */
+  select?: Prisma.PedidoSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Pedido
+   */
+  omit?: Prisma.PedidoOmit<ExtArgs> | null
+  /**
+   * The data used to update Pedidos.
+   */
+  data: Prisma.XOR<Prisma.PedidoUpdateManyMutationInput, Prisma.PedidoUncheckedUpdateManyInput>
+  /**
+   * Filter which Pedidos to update
+   */
+  where?: Prisma.PedidoWhereInput
+  /**
+   * Limit how many Pedidos to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PedidoIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

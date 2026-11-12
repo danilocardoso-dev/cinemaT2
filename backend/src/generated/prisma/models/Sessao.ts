@@ -823,7 +823,29 @@ export type SessaoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   _count?: boolean | Prisma.SessaoCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sessao"]>
 
+export type SessaoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  filmeId?: boolean
+  salaId?: boolean
+  dataHora?: boolean
+  precoBase?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  filme?: boolean | Prisma.FilmeDefaultArgs<ExtArgs>
+  sala?: boolean | Prisma.SalaDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["sessao"]>
 
+export type SessaoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  filmeId?: boolean
+  salaId?: boolean
+  dataHora?: boolean
+  precoBase?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  filme?: boolean | Prisma.FilmeDefaultArgs<ExtArgs>
+  sala?: boolean | Prisma.SalaDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["sessao"]>
 
 export type SessaoSelectScalar = {
   id?: boolean
@@ -841,6 +863,14 @@ export type SessaoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   sala?: boolean | Prisma.SalaDefaultArgs<ExtArgs>
   ingressos?: boolean | Prisma.Sessao$ingressosArgs<ExtArgs>
   _count?: boolean | Prisma.SessaoCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type SessaoIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  filme?: boolean | Prisma.FilmeDefaultArgs<ExtArgs>
+  sala?: boolean | Prisma.SalaDefaultArgs<ExtArgs>
+}
+export type SessaoIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  filme?: boolean | Prisma.FilmeDefaultArgs<ExtArgs>
+  sala?: boolean | Prisma.SalaDefaultArgs<ExtArgs>
 }
 
 export type $SessaoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -976,6 +1006,30 @@ export interface SessaoDelegate<ExtArgs extends runtime.Types.Extensions.Interna
   createMany<T extends SessaoCreateManyArgs>(args?: Prisma.SelectSubset<T, SessaoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Sessaos and returns the data saved in the database.
+   * @param {SessaoCreateManyAndReturnArgs} args - Arguments to create many Sessaos.
+   * @example
+   * // Create many Sessaos
+   * const sessao = await prisma.sessao.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Sessaos and only return the `id`
+   * const sessaoWithIdOnly = await prisma.sessao.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends SessaoCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SessaoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessaoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Sessao.
    * @param {SessaoDeleteArgs} args - Arguments to delete one Sessao.
    * @example
@@ -1038,6 +1092,36 @@ export interface SessaoDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * 
    */
   updateMany<T extends SessaoUpdateManyArgs>(args: Prisma.SelectSubset<T, SessaoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Sessaos and returns the data updated in the database.
+   * @param {SessaoUpdateManyAndReturnArgs} args - Arguments to update many Sessaos.
+   * @example
+   * // Update many Sessaos
+   * const sessao = await prisma.sessao.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Sessaos and only return the `id`
+   * const sessaoWithIdOnly = await prisma.sessao.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends SessaoUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SessaoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessaoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Sessao.
@@ -1475,6 +1559,29 @@ export type SessaoCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * Sessao createManyAndReturn
+ */
+export type SessaoCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Sessao
+   */
+  select?: Prisma.SessaoSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Sessao
+   */
+  omit?: Prisma.SessaoOmit<ExtArgs> | null
+  /**
+   * The data used to create many Sessaos.
+   */
+  data: Prisma.SessaoCreateManyInput | Prisma.SessaoCreateManyInput[]
+  skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessaoIncludeCreateManyAndReturn<ExtArgs> | null
+}
+
+/**
  * Sessao update
  */
 export type SessaoUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1516,6 +1623,36 @@ export type SessaoUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Sessaos to update.
    */
   limit?: number
+}
+
+/**
+ * Sessao updateManyAndReturn
+ */
+export type SessaoUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Sessao
+   */
+  select?: Prisma.SessaoSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Sessao
+   */
+  omit?: Prisma.SessaoOmit<ExtArgs> | null
+  /**
+   * The data used to update Sessaos.
+   */
+  data: Prisma.XOR<Prisma.SessaoUpdateManyMutationInput, Prisma.SessaoUncheckedUpdateManyInput>
+  /**
+   * Filter which Sessaos to update
+   */
+  where?: Prisma.SessaoWhereInput
+  /**
+   * Limit how many Sessaos to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessaoIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

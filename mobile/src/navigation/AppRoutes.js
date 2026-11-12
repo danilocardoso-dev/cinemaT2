@@ -43,7 +43,7 @@ function Abas() {
         ),
       })}
     >
-      <Tab.Screen name="Início" component={HomeScreen} options={{ title: 'CineDev' }} />
+      <Tab.Screen name="Início" component={HomeScreen} options={{ title: 'CineDev', tabBarLabel: 'Início' }} />
       <Tab.Screen name="Filmes" component={FilmesScreen} />
       <Tab.Screen name="Sessões" component={SessoesScreen} />
       <Tab.Screen name="Lanches" component={LanchesScreen} />

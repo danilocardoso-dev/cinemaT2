@@ -276,7 +276,6 @@ export type FilmeOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sessoes?: Prisma.SessaoOrderByRelationAggregateInput
-  _relevance?: Prisma.FilmeOrderByRelevanceInput
 }
 
 export type FilmeWhereUniqueInput = Prisma.AtLeast<{
@@ -420,12 +419,6 @@ export type FilmeUncheckedUpdateManyInput = {
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type FilmeOrderByRelevanceInput = {
-  fields: Prisma.FilmeOrderByRelevanceFieldEnum | Prisma.FilmeOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type FilmeCountOrderByAggregateInput = {
@@ -628,7 +621,31 @@ export type FilmeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   _count?: boolean | Prisma.FilmeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["filme"]>
 
+export type FilmeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  titulo?: boolean
+  sinopse?: boolean
+  classificacao?: boolean
+  duracao?: boolean
+  genero?: boolean
+  datasExibicao?: boolean
+  ativo?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+}, ExtArgs["result"]["filme"]>
 
+export type FilmeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  titulo?: boolean
+  sinopse?: boolean
+  classificacao?: boolean
+  duracao?: boolean
+  genero?: boolean
+  datasExibicao?: boolean
+  ativo?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+}, ExtArgs["result"]["filme"]>
 
 export type FilmeSelectScalar = {
   id?: boolean
@@ -648,6 +665,8 @@ export type FilmeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   sessoes?: boolean | Prisma.Filme$sessoesArgs<ExtArgs>
   _count?: boolean | Prisma.FilmeCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type FilmeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type FilmeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $FilmePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Filme"
@@ -783,6 +802,30 @@ export interface FilmeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
   createMany<T extends FilmeCreateManyArgs>(args?: Prisma.SelectSubset<T, FilmeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Filmes and returns the data saved in the database.
+   * @param {FilmeCreateManyAndReturnArgs} args - Arguments to create many Filmes.
+   * @example
+   * // Create many Filmes
+   * const filme = await prisma.filme.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Filmes and only return the `id`
+   * const filmeWithIdOnly = await prisma.filme.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends FilmeCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, FilmeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilmePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Filme.
    * @param {FilmeDeleteArgs} args - Arguments to delete one Filme.
    * @example
@@ -845,6 +888,36 @@ export interface FilmeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * 
    */
   updateMany<T extends FilmeUpdateManyArgs>(args: Prisma.SelectSubset<T, FilmeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Filmes and returns the data updated in the database.
+   * @param {FilmeUpdateManyAndReturnArgs} args - Arguments to update many Filmes.
+   * @example
+   * // Update many Filmes
+   * const filme = await prisma.filme.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Filmes and only return the `id`
+   * const filmeWithIdOnly = await prisma.filme.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends FilmeUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, FilmeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilmePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Filme.
@@ -1283,6 +1356,25 @@ export type FilmeCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
+ * Filme createManyAndReturn
+ */
+export type FilmeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Filme
+   */
+  select?: Prisma.FilmeSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Filme
+   */
+  omit?: Prisma.FilmeOmit<ExtArgs> | null
+  /**
+   * The data used to create many Filmes.
+   */
+  data: Prisma.FilmeCreateManyInput | Prisma.FilmeCreateManyInput[]
+  skipDuplicates?: boolean
+}
+
+/**
  * Filme update
  */
 export type FilmeUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1312,6 +1404,32 @@ export type FilmeUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
  * Filme updateMany
  */
 export type FilmeUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update Filmes.
+   */
+  data: Prisma.XOR<Prisma.FilmeUpdateManyMutationInput, Prisma.FilmeUncheckedUpdateManyInput>
+  /**
+   * Filter which Filmes to update
+   */
+  where?: Prisma.FilmeWhereInput
+  /**
+   * Limit how many Filmes to update.
+   */
+  limit?: number
+}
+
+/**
+ * Filme updateManyAndReturn
+ */
+export type FilmeUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Filme
+   */
+  select?: Prisma.FilmeSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Filme
+   */
+  omit?: Prisma.FilmeOmit<ExtArgs> | null
   /**
    * The data used to update Filmes.
    */

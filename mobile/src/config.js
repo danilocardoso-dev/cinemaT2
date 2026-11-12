@@ -1,10 +1,21 @@
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 
-// Endereço da API do CineDev (backend NestJS).
-// - Navegador (web): localhost funciona.
-// - Emulador Android: 10.0.2.2 aponta para o computador.
-// - Celular físico (Expo Go): use o IP do computador na rede, ex.: 192.168.0.10
-//   Defina em mobile/.env:  EXPO_PUBLIC_API_URL=http://192.168.0.10:3000
-const padrao = Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://localhost:3000';
+// Endereço da API do CineDev (backend NestJS, porta 3000).
+// Ordem de escolha:
+// 1. EXPO_PUBLIC_API_URL (mobile/.env), se definido;
+// 2. no celular/emulador: o mesmo IP do computador que serve o app (Metro),
+//    descoberto automaticamente (funciona no Expo Go em celular físico);
+// 3. no navegador: localhost.
+function descobrirUrl() {
+  if (process.env.EXPO_PUBLIC_API_URL) return process.env.EXPO_PUBLIC_API_URL;
+  if (Platform.OS === 'web') return 'http://localhost:3000';
 
-export const API_URL = process.env.EXPO_PUBLIC_API_URL || padrao;
+  const hostUri = Constants.expoConfig?.hostUri ?? Constants.expoGoConfig?.debuggerHost;
+  const host = hostUri?.split(':')[0];
+  if (host) return `http://${host}:3000`;
+
+  return Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://localhost:3000';
+}
+
+export const API_URL = descobrirUrl();
