@@ -2,23 +2,25 @@ import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useAuth, podeGerenciarSessoesELanches } from '../auth/AuthContext';
 import { excluirLanche, getLanches, mensagemDeErro, salvarLanche } from '../services/api';
-import { lancheSchema, errosDoZod } from '../schemas/validation';
+import { lancheSchema, errosDoZod, type Erros } from '../schemas/validation';
 import { avisar, Botao, Campo, Cartao, confirmar, EstadoLista, Selo, Tela, useCarregar } from '../components/ui';
 import { cores } from '../styles/theme';
+import type { AbaScreenProps, AppScreenProps } from '../navigation/types';
+import type { Lanche } from '../types';
 
 const buscar = async () => (await getLanches()).data;
-const real = (n) => `R$ ${Number(n).toFixed(2).replace('.', ',')}`;
+const real = (n: number) => `R$ ${Number(n).toFixed(2).replace('.', ',')}`;
 
-export function LanchesScreen({ navigation }) {
+export function LanchesScreen({ navigation }: AbaScreenProps<'Lanches'>) {
   const { user } = useAuth();
   const podeEditar = podeGerenciarSessoesELanches(user);
   const { dados, carregando, erro, recarregar } = useCarregar(buscar);
 
-  function excluir(l) {
+  function excluir(l: Lanche) {
     confirmar(`Excluir "${l.nome}"?`, async () => {
       try {
         await excluirLanche(l.id);
-        recarregar();
+        void recarregar();
       } catch (e) {
         avisar('Erro', mensagemDeErro(e, 'Erro ao excluir lanche.'));
       }
@@ -28,7 +30,7 @@ export function LanchesScreen({ navigation }) {
   return (
     <Tela>
       {podeEditar && <Botao titulo="Cadastrar lanche" icone="add-circle" onPress={() => navigation.navigate('LancheForm')} />}
-      <EstadoLista carregando={carregando} erro={erro} recarregar={recarregar} vazio={dados.length === 0} textoVazio="Nenhum lanche cadastrado." />
+      <EstadoLista carregando={carregando} erro={erro} recarregar={() => void recarregar()} vazio={dados.length === 0} textoVazio="Nenhum lanche cadastrado." />
       {!carregando && dados.map((l) => (
         <Cartao key={l.id}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
@@ -51,7 +53,7 @@ export function LanchesScreen({ navigation }) {
   );
 }
 
-export function LancheFormScreen({ navigation, route }) {
+export function LancheFormScreen({ navigation, route }: AppScreenProps<'LancheForm'>) {
   const lanche = route.params?.lanche;
   const [form, setForm] = useState({
     nome: lanche?.nome ?? '',
@@ -59,17 +61,18 @@ export function LancheFormScreen({ navigation, route }) {
     valorUnitario: lanche ? String(lanche.valorUnitario) : '',
     qtUnidade: lanche ? String(lanche.qtUnidade) : '',
   });
-  const [erros, setErros] = useState({});
+  const [erros, setErros] = useState<Erros>({});
   const [salvando, setSalvando] = useState(false);
-  const set = (campo) => (valor) => setForm({ ...form, [campo]: valor });
+  const set = (campo: keyof typeof form) => (valor: string) => setForm({ ...form, [campo]: valor });
 
   async function salvar() {
     const r = lancheSchema.safeParse({
-      ...form,
+      nome: form.nome,
+      descricao: form.descricao,
       valorUnitario: Number(form.valorUnitario.replace(',', '.')),
       qtUnidade: form.qtUnidade === '' ? NaN : Number(form.qtUnidade),
     });
-    if (!r.success) return setErros(errosDoZod(r));
+    if (!r.success) return setErros(errosDoZod(r.error));
     setErros({});
     setSalvando(true);
     try {
@@ -88,7 +91,7 @@ export function LancheFormScreen({ navigation, route }) {
       <Campo rotulo="Descrição" placeholder="Descreva o item" multiline value={form.descricao} onChangeText={set('descricao')} erro={erros.descricao} />
       <Campo rotulo="Valor unitário (R$)" placeholder="Ex: 18.50" keyboardType="decimal-pad" value={form.valorUnitario} onChangeText={set('valorUnitario')} erro={erros.valorUnitario} />
       <Campo rotulo="Quantidade em estoque" placeholder="Ex: 50" keyboardType="numeric" value={form.qtUnidade} onChangeText={set('qtUnidade')} erro={erros.qtUnidade} />
-      <Botao titulo={lanche ? 'SALVAR ALTERAÇÕES' : 'CADASTRAR LANCHE'} onPress={salvar} carregando={salvando} />
+      <Botao titulo={lanche ? 'SALVAR ALTERAÇÕES' : 'CADASTRAR LANCHE'} onPress={() => void salvar()} carregando={salvando} />
     </Tela>
   );
 }

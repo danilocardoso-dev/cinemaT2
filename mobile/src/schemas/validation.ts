@@ -42,11 +42,13 @@ export const registroSchema = z.object({
   senha: z.string().min(6, 'A senha deve possuir no mínimo 6 caracteres'),
 });
 
+export type Erros = Record<string, string>;
+
 // Converte erros do zod em { campo: mensagem }
-export function errosDoZod(resultado) {
-  const erros = {};
-  for (const issue of resultado.error.issues) {
-    const campo = issue.path[0];
+export function errosDoZod(erro: z.ZodError): Erros {
+  const erros: Erros = {};
+  for (const issue of erro.issues) {
+    const campo = String(issue.path[0] ?? '');
     if (campo && !erros[campo]) erros[campo] = issue.message;
   }
   return erros;

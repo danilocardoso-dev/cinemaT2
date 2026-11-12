@@ -4,10 +4,18 @@ import { Ionicons } from '@expo/vector-icons';
 import { criarPedidoCompleto, getLanches, mensagemDeErro } from '../services/api';
 import { Botao, Cartao, Tela } from '../components/ui';
 import { cores } from '../styles/theme';
+import type { AppScreenProps } from '../navigation/types';
+import type { Lanche, Pedido } from '../types';
 
-const real = (n) => `R$ ${Number(n).toFixed(2).replace('.', ',')}`;
+const real = (n: number) => `R$ ${Number(n).toFixed(2).replace('.', ',')}`;
 
-function Contador({ valor, onMais, onMenos }) {
+interface ContadorProps {
+  valor: number;
+  onMais: () => void;
+  onMenos: () => void;
+}
+
+function Contador({ valor, onMais, onMenos }: ContadorProps) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
       <TouchableOpacity onPress={onMenos} style={{ padding: 4 }}><Ionicons name="remove-circle" size={30} color={cores.cinza} /></TouchableOpacity>
@@ -18,20 +26,20 @@ function Contador({ valor, onMais, onMenos }) {
 }
 
 // Novo pedido para uma sessão: ingressos + lanches (mesmo fluxo do painel web)
-export default function PedidoScreen({ navigation, route }) {
+export default function PedidoScreen({ navigation, route }: AppScreenProps<'Pedido'>) {
   const sessao = route.params.sessao;
   const [qtInteira, setQtInteira] = useState(0);
   const [qtMeia, setQtMeia] = useState(0);
-  const [lanches, setLanches] = useState([]);
-  const [escolhidos, setEscolhidos] = useState({}); // lancheId -> quantidade
+  const [lanches, setLanches] = useState<Lanche[]>([]);
+  const [escolhidos, setEscolhidos] = useState<Record<number, number>>({}); // lancheId -> quantidade
   const [erro, setErro] = useState('');
   const [enviando, setEnviando] = useState(false);
-  const [pedido, setPedido] = useState(null);
+  const [pedido, setPedido] = useState<Pedido | null>(null);
 
   useEffect(() => {
     getLanches()
       .then(({ data }) => setLanches(data.filter((l) => l.ativo !== false && l.qtUnidade > 0)))
-      .catch((e) => setErro(mensagemDeErro(e, 'Erro ao carregar lanches.')));
+      .catch((e: unknown) => setErro(mensagemDeErro(e, 'Erro ao carregar lanches.')));
   }, []);
 
   const precoInteira = sessao.precoBase ?? 40;
@@ -43,7 +51,7 @@ export default function PedidoScreen({ navigation, route }) {
     return ingressos + comidas;
   }, [qtInteira, qtMeia, escolhidos, lanches, precoInteira, precoMeia]);
 
-  const alterarLanche = (l, delta) => {
+  const alterarLanche = (l: Lanche, delta: number) => {
     const atual = escolhidos[l.id] ?? 0;
     const novo = Math.min(l.qtUnidade, Math.max(0, atual + delta));
     setEscolhidos({ ...escolhidos, [l.id]: novo });
@@ -120,7 +128,7 @@ export default function PedidoScreen({ navigation, route }) {
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{real(total)}</Text>
         </View>
       </Cartao>
-      <Botao titulo="FINALIZAR PEDIDO" cor={cores.sucesso} onPress={finalizar} carregando={enviando} desabilitado={total === 0} />
+      <Botao titulo="FINALIZAR PEDIDO" cor={cores.sucesso} onPress={() => void finalizar()} carregando={enviando} desabilitado={total === 0} />
     </Tela>
   );
 }

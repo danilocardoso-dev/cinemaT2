@@ -1,11 +1,21 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import axios from 'axios';
 import { getPerfil, login as loginReq, registrar as registrarReq, onUnauthorized } from '../services/api';
 import { clearAuthSession, loadAuthSession, saveAuthSession } from '../services/storage';
+import type { UsuarioAutenticado } from '../types';
 
-const AuthContext = createContext(null);
+interface AuthContextValue {
+  user: UsuarioAutenticado | null;
+  carregando: boolean;
+  entrar: (email: string, senha: string) => Promise<void>;
+  cadastrar: (nome: string, email: string, senha: string) => Promise<void>;
+  sair: () => Promise<void>;
+}
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<UsuarioAutenticado | null>(null);
   const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
@@ -24,17 +34,15 @@ export function AuthProvider({ children }) {
           const { data } = await getPerfil();
           setUser(data);
         } catch (erro) {
-          if (erro.response?.status === 401 || !erro.response) {
-            // 401: token inválido. Sem resposta: mantém a sessão salva e deixa a tela tratar o erro
-            if (erro.response) await sair();
-          }
+          // 401: token inválido, encerra a sessão. Sem resposta (API fora): mantém a sessão salva
+          if (axios.isAxiosError(erro) && erro.response) await sair();
         }
       }
       setCarregando(false);
     })();
   }, []);
 
-  const value = useMemo(
+  const value = useMemo<AuthContextValue>(
     () => ({
       user,
       carregando,
@@ -59,12 +67,13 @@ export function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export function useAuth() {
+export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth deve ser usado dentro de AuthProvider.');
   return ctx;
 }
 
 // Mesmas regras do painel web
-export const podeGerenciarFilmesESalas = (user) => user?.cargo === 'ADMIN';
-export const podeGerenciarSessoesELanches = (user) => user?.cargo === 'ADMIN' || user?.cargo === 'ATENDENTE';
+export const podeGerenciarFilmesESalas = (user: UsuarioAutenticado | null) => user?.cargo === 'ADMIN';
+export const podeGerenciarSessoesELanches = (user: UsuarioAutenticado | null) =>
+  user?.cargo === 'ADMIN' || user?.cargo === 'ATENDENTE';

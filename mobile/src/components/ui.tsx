@@ -1,19 +1,22 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import {
   ActivityIndicator, Alert, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,
+  type StyleProp, type TextInputProps, type ViewStyle,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { cores } from '../styles/theme';
 import { mensagemDeErro } from '../services/api';
 
+type NomeIcone = keyof typeof Ionicons.glyphMap;
+
 // ---- Alertas que funcionam no celular e no navegador
-export function avisar(titulo, mensagem) {
+export function avisar(titulo: string, mensagem?: string): void {
   if (Platform.OS === 'web') window.alert(mensagem ? `${titulo}\n${mensagem}` : titulo);
   else Alert.alert(titulo, mensagem);
 }
 
-export function confirmar(mensagem, aoConfirmar) {
+export function confirmar(mensagem: string, aoConfirmar: () => void): void {
   if (Platform.OS === 'web') {
     if (window.confirm(mensagem)) aoConfirmar();
     return;
@@ -25,8 +28,8 @@ export function confirmar(mensagem, aoConfirmar) {
 }
 
 // ---- Carrega dados toda vez que a tela ganha foco
-export function useCarregar(buscar) {
-  const [dados, setDados] = useState([]);
+export function useCarregar<T>(buscar: () => Promise<T[]>) {
+  const [dados, setDados] = useState<T[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
 
@@ -44,7 +47,7 @@ export function useCarregar(buscar) {
 
   useFocusEffect(
     useCallback(() => {
-      recarregar();
+      void recarregar();
     }, [recarregar]),
   );
 
@@ -52,8 +55,12 @@ export function useCarregar(buscar) {
 }
 
 // ---- Componentes visuais
-export function Tela({ children, rolavel = true, contentStyle }) {
-  if (!rolavel) return <View style={[s.tela, contentStyle]}>{children}</View>;
+interface TelaProps {
+  children: ReactNode;
+  contentStyle?: StyleProp<ViewStyle>;
+}
+
+export function Tela({ children, contentStyle }: TelaProps) {
   return (
     <ScrollView style={s.tela} contentContainerStyle={[s.conteudo, contentStyle]} keyboardShouldPersistTaps="handled">
       {children}
@@ -61,7 +68,17 @@ export function Tela({ children, rolavel = true, contentStyle }) {
   );
 }
 
-export function Botao({ titulo, onPress, cor = cores.primaria, carregando, desabilitado, icone, pequeno }) {
+interface BotaoProps {
+  titulo: string;
+  onPress: () => void;
+  cor?: string;
+  carregando?: boolean;
+  desabilitado?: boolean;
+  icone?: NomeIcone;
+  pequeno?: boolean;
+}
+
+export function Botao({ titulo, onPress, cor = cores.primaria, carregando, desabilitado, icone, pequeno }: BotaoProps) {
   return (
     <TouchableOpacity
       style={[s.botao, pequeno && s.botaoPequeno, { backgroundColor: cor }, (desabilitado || carregando) && { opacity: 0.5 }]}
@@ -80,13 +97,18 @@ export function Botao({ titulo, onPress, cor = cores.primaria, carregando, desab
   );
 }
 
-export function Campo({ rotulo, erro, ...props }) {
+interface CampoProps extends TextInputProps {
+  rotulo?: string;
+  erro?: string;
+}
+
+export function Campo({ rotulo, erro, ...props }: CampoProps) {
   return (
     <View style={{ gap: 4 }}>
       {rotulo && <Text style={s.rotulo}>{rotulo}</Text>}
       <TextInput
         placeholderTextColor={cores.cinza}
-        style={[s.input, props.multiline && { height: 90, textAlignVertical: 'top', paddingTop: 12 }, erro && { borderColor: cores.perigo }]}
+        style={[s.input, props.multiline && { height: 90, textAlignVertical: 'top', paddingTop: 12 }, erro ? { borderColor: cores.perigo } : null]}
         {...props}
       />
       {erro ? <Text style={s.erro}>{erro}</Text> : null}
@@ -95,7 +117,15 @@ export function Campo({ rotulo, erro, ...props }) {
 }
 
 // Seleção de uma opção entre várias (substitui o <select> do painel)
-export function Opcoes({ rotulo, opcoes, valor, onChange, erro }) {
+interface OpcoesProps {
+  rotulo?: string;
+  opcoes: Array<{ valor: string | number; rotulo: string }>;
+  valor: string | number;
+  onChange: (valor: string | number) => void;
+  erro?: string;
+}
+
+export function Opcoes({ rotulo, opcoes, valor, onChange, erro }: OpcoesProps) {
   return (
     <View style={{ gap: 6 }}>
       {rotulo && <Text style={s.rotulo}>{rotulo}</Text>}
@@ -114,11 +144,11 @@ export function Opcoes({ rotulo, opcoes, valor, onChange, erro }) {
   );
 }
 
-export function Cartao({ children, style }) {
+export function Cartao({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
   return <View style={[s.cartao, style]}>{children}</View>;
 }
 
-export function Selo({ texto, cor = cores.primaria }) {
+export function Selo({ texto, cor = cores.primaria }: { texto: string; cor?: string }) {
   return (
     <View style={[s.selo, { backgroundColor: cor }]}>
       <Text style={s.seloTexto}>{texto}</Text>
@@ -126,7 +156,15 @@ export function Selo({ texto, cor = cores.primaria }) {
   );
 }
 
-export function EstadoLista({ carregando, erro, vazio, textoVazio, recarregar }) {
+interface EstadoListaProps {
+  carregando: boolean;
+  erro: string;
+  vazio: boolean;
+  textoVazio: string;
+  recarregar: () => void;
+}
+
+export function EstadoLista({ carregando, erro, vazio, textoVazio, recarregar }: EstadoListaProps) {
   if (carregando) return <ActivityIndicator style={{ marginTop: 40 }} color={cores.primaria} />;
   if (erro) {
     return (
@@ -140,11 +178,9 @@ export function EstadoLista({ carregando, erro, vazio, textoVazio, recarregar })
   return null;
 }
 
-export const classificacaoCor = {
-  Livre: '#198754', 10: '#0dcaf0', 12: '#0d6efd', 14: '#ffc107', 16: '#fd7e14', 18: '#dc3545',
+export const classificacaoCor: Record<string, string> = {
+  Livre: '#198754', '10': '#0dcaf0', '12': '#0d6efd', '14': '#ffc107', '16': '#fd7e14', '18': '#dc3545',
 };
-
-export const estilos = StyleSheet.create({});
 
 const s = StyleSheet.create({
   tela: { flex: 1, backgroundColor: cores.fundo },

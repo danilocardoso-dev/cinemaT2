@@ -41,16 +41,20 @@ EXPO_PUBLIC_API_URL=http://192.168.0.10:3000
 
 ```
 src/
-├── auth/          AuthContext (login, cadastro, sessão salva no AsyncStorage)
-├── services/      api.js (axios + endpoints), storage.js (token)
-├── navigation/    AppRoutes.js (login | abas + telas de formulário)
+├── auth/          AuthContext.tsx (login, cadastro, sessão salva no AsyncStorage)
+├── services/      api.ts (axios + endpoints), storage.ts (token)
+├── navigation/    AppRoutes.tsx (login | abas + telas de formulário), types.ts (rotas tipadas)
 ├── screens/       Login, Register, Home, Filmes, Salas, Sessoes, Lanches, Pedido, Perfil
-├── components/    ui.js (campos, botões, listas)
-├── schemas/       validation.js (zod, mesmas regras do painel)
-└── styles/        theme.js
+├── components/    ui.tsx (campos, botões, listas)
+├── schemas/       validation.ts (zod, mesmas regras do painel)
+└── styles/        theme.ts
 ```
 
 ## Observações
 
 - Data/hora da sessão é digitada como `AAAA-MM-DD HH:mm` (horário local).
 - Um pedido é criado em etapas (pedido, ingressos, itens de lanche) e desfeito se alguma falhar, como no painel web.
+
+## TypeScript
+
+O app é escrito em TypeScript (modo `strict`). Para checar os tipos: `npx tsc --noEmit`. Os tipos da API ficam em `src/types` e as rotas tipadas em `src/navigation/types.ts`.

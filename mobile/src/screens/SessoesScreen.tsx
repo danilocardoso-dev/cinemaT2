@@ -2,32 +2,36 @@ import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useAuth, podeGerenciarSessoesELanches } from '../auth/AuthContext';
 import { excluirSessao, getFilmes, getSalas, getSessoes, mensagemDeErro, salvarSessao } from '../services/api';
-import { sessaoSchema, errosDoZod } from '../schemas/validation';
+import { sessaoSchema, errosDoZod, type Erros } from '../schemas/validation';
 import { avisar, Botao, Campo, Cartao, confirmar, EstadoLista, Opcoes, Selo, Tela, useCarregar } from '../components/ui';
 import { cores } from '../styles/theme';
+import type { AbaScreenProps, AppScreenProps } from '../navigation/types';
+import type { Sessao } from '../types';
 
 const buscar = async () => (await getSessoes()).data;
-const real = (n) => `R$ ${Number(n).toFixed(2).replace('.', ',')}`;
-const dataBr = (iso) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+const buscarFilmes = async () => (await getFilmes()).data;
+const buscarSalas = async () => (await getSalas()).data;
+const real = (n: number) => `R$ ${Number(n).toFixed(2).replace('.', ',')}`;
+const dataBr = (iso: string) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 
 // "2026-12-01 19:30" (horário local) <-> Date
-const doTexto = (texto) => new Date(texto.trim().replace(' ', 'T'));
-const paraTexto = (iso) => {
+const doTexto = (texto: string) => new Date(texto.trim().replace(' ', 'T'));
+const paraTexto = (iso: string) => {
   const d = new Date(iso);
-  const p = (n) => String(n).padStart(2, '0');
+  const p = (n: number) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 };
 
-export function SessoesScreen({ navigation }) {
+export function SessoesScreen({ navigation }: AbaScreenProps<'Sessões'>) {
   const { user } = useAuth();
   const equipe = podeGerenciarSessoesELanches(user);
   const { dados, carregando, erro, recarregar } = useCarregar(buscar);
 
-  function excluir(s) {
+  function excluir(s: Sessao) {
     confirmar('Excluir esta sessão?', async () => {
       try {
         await excluirSessao(s.id);
-        recarregar();
+        void recarregar();
       } catch (e) {
         avisar('Erro', mensagemDeErro(e, 'Erro ao excluir sessão.'));
       }
@@ -37,7 +41,7 @@ export function SessoesScreen({ navigation }) {
   return (
     <Tela>
       {equipe && <Botao titulo="Agendar sessão" icone="add-circle" onPress={() => navigation.navigate('SessaoForm')} />}
-      <EstadoLista carregando={carregando} erro={erro} recarregar={recarregar} vazio={dados.length === 0} textoVazio="Nenhuma sessão agendada." />
+      <EstadoLista carregando={carregando} erro={erro} recarregar={() => void recarregar()} vazio={dados.length === 0} textoVazio="Nenhuma sessão agendada." />
       {!carregando && dados.map((s) => (
         <Cartao key={s.id}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
@@ -58,17 +62,17 @@ export function SessoesScreen({ navigation }) {
   );
 }
 
-export function SessaoFormScreen({ navigation, route }) {
+export function SessaoFormScreen({ navigation, route }: AppScreenProps<'SessaoForm'>) {
   const sessao = route.params?.sessao;
   const [form, setForm] = useState({
     filmeId: sessao ? String(sessao.filmeId) : '',
     salaId: sessao ? String(sessao.salaId) : '',
     dataHora: sessao ? paraTexto(sessao.dataHora) : '',
   });
-  const [erros, setErros] = useState({});
+  const [erros, setErros] = useState<Erros>({});
   const [salvando, setSalvando] = useState(false);
-  const filmes = useCarregar(async () => (await getFilmes()).data);
-  const salas = useCarregar(async () => (await getSalas()).data);
+  const filmes = useCarregar(buscarFilmes);
+  const salas = useCarregar(buscarSalas);
 
   async function salvar() {
     const r = sessaoSchema.safeParse({
@@ -76,14 +80,14 @@ export function SessaoFormScreen({ navigation, route }) {
       salaId: Number(form.salaId),
       dataHora: form.dataHora ? doTexto(form.dataHora).toString() : '',
     });
-    if (!r.success) return setErros(errosDoZod(r));
+    if (!r.success) return setErros(errosDoZod(r.error));
     setErros({});
     setSalvando(true);
     try {
       await salvarSessao({
         id: sessao?.id,
-        filmeId: r.data.filmeId,
-        salaId: r.data.salaId,
+        filmeId: Number(form.filmeId),
+        salaId: Number(form.salaId),
         dataHora: doTexto(form.dataHora).toISOString(),
       });
       navigation.goBack();
@@ -102,7 +106,7 @@ export function SessaoFormScreen({ navigation, route }) {
         opcoes={salas.dados.map((s) => ({ valor: s.id, rotulo: `Sala ${s.numero}` }))} />
       <Campo rotulo="Data e hora" placeholder="AAAA-MM-DD HH:mm  (ex: 2026-12-01 19:30)" autoCapitalize="none"
         value={form.dataHora} onChangeText={(v) => setForm({ ...form, dataHora: v })} erro={erros.dataHora} />
-      <Botao titulo={sessao ? 'SALVAR ALTERAÇÕES' : 'AGENDAR SESSÃO'} onPress={salvar} carregando={salvando} />
+      <Botao titulo={sessao ? 'SALVAR ALTERAÇÕES' : 'AGENDAR SESSÃO'} onPress={() => void salvar()} carregando={salvando} />
     </Tela>
   );
 }

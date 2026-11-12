@@ -3,21 +3,22 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } fr
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../auth/AuthContext';
 import { mensagemDeErro } from '../services/api';
-import { loginSchema, errosDoZod } from '../schemas/validation';
+import { loginSchema, errosDoZod, type Erros } from '../schemas/validation';
 import { Botao, Campo } from '../components/ui';
 import { cores } from '../styles/theme';
+import type { AuthScreenProps } from '../navigation/types';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation }: AuthScreenProps<'Login'>) {
   const { entrar } = useAuth();
   const [form, setForm] = useState({ email: '', senha: '' });
-  const [erros, setErros] = useState({});
+  const [erros, setErros] = useState<Erros>({});
   const [erroApi, setErroApi] = useState('');
   const [carregando, setCarregando] = useState(false);
 
   async function handleLogin() {
     setErroApi('');
     const r = loginSchema.safeParse(form);
-    if (!r.success) return setErros(errosDoZod(r));
+    if (!r.success) return setErros(errosDoZod(r.error));
     setErros({});
     setCarregando(true);
     try {

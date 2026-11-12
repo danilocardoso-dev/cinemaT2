@@ -2,23 +2,24 @@ import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useAuth } from '../auth/AuthContext';
 import { mensagemDeErro } from '../services/api';
-import { registroSchema, errosDoZod } from '../schemas/validation';
+import { registroSchema, errosDoZod, type Erros } from '../schemas/validation';
 import { Botao, Campo, Tela } from '../components/ui';
 import { cores } from '../styles/theme';
+import type { AuthScreenProps } from '../navigation/types';
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({ navigation }: AuthScreenProps<'Registro'>) {
   const { cadastrar } = useAuth();
   const [form, setForm] = useState({ nome: '', email: '', senha: '', confirmar: '' });
-  const [erros, setErros] = useState({});
+  const [erros, setErros] = useState<Erros>({});
   const [erroApi, setErroApi] = useState('');
   const [carregando, setCarregando] = useState(false);
 
-  const alterar = (campo, valor) => setForm({ ...form, [campo]: valor });
+  const alterar = (campo: keyof typeof form, valor: string) => setForm({ ...form, [campo]: valor });
 
   async function handleRegistrar() {
     setErroApi('');
     const r = registroSchema.safeParse(form);
-    const novos = r.success ? {} : errosDoZod(r);
+    const novos: Erros = r.success ? {} : errosDoZod(r.error);
     if (form.senha !== form.confirmar) novos.confirmar = 'As senhas não conferem';
     setErros(novos);
     if (Object.keys(novos).length) return;

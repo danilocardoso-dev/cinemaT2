@@ -7,11 +7,11 @@ import Constants from 'expo-constants';
 // 2. no celular/emulador: o mesmo IP do computador que serve o app (Metro),
 //    descoberto automaticamente (funciona no Expo Go em celular físico);
 // 3. no navegador: localhost.
-function descobrirUrl() {
+function descobrirUrl(): string {
   if (process.env.EXPO_PUBLIC_API_URL) return process.env.EXPO_PUBLIC_API_URL;
   if (Platform.OS === 'web') return 'http://localhost:3000';
 
-  const hostUri = Constants.expoConfig?.hostUri ?? Constants.expoGoConfig?.debuggerHost;
+  const hostUri = Constants.expoConfig?.hostUri;
   const host = hostUri?.split(':')[0];
   if (host) return `http://${host}:3000`;
 
