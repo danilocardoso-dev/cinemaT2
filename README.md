@@ -40,7 +40,7 @@ PORT=3000
 
 O arquivo `.env` contém dados locais e não é enviado ao Git.
 
-Opcional, para desenvolvimento: com o backend rodando, `npm run db:seed-dev` cria os usuários `admin@cinema.com`, `atendente@cinema.com` e `cliente@cinema.com` (senha `123456`) e dados de exemplo.
+Opcional, para desenvolvimento: com o backend rodando, `npm run db:seed-dev` (em `backend`) cria 10 usuários (2 `ADMIN`, 3 `ATENDENTE`, 5 `CLIENTE`, senha `123456` para todos, ex.: `admin@cinema.com`, `atendente@cinema.com`, `cliente@cinema.com`), 8 filmes, 4 salas, sessões dos próximos 7 dias e 6 lanches. Pode ser rodado mais de uma vez: não duplica o que já existe.
 
 ### 3. Iniciar o backend
 
